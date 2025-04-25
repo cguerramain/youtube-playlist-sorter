@@ -1,0 +1,9 @@
+[project]
+name = "playlist_sorter"
+dynamic = ["version"]
+
+[tool.ruff]
+indent-width = 2
+
+[tool.ruff.format]
+quote-style = "single"
