@@ -33,7 +33,7 @@ class Playlist:
     self.playlist_id = playlist_id
 
   @cached_property
-  def playlist_dict(self):
+  def playlist_dict(self) -> MutableMapping[str, Any]:
     """Returns a dictionary containing the playlist's information and tracks.
 
     Returns:
@@ -42,7 +42,7 @@ class Playlist:
     """
     return self.client.get_playlist(self.playlist_id)
 
-  def metadata(self):
+  def metadata(self) -> MutableMapping[str, Any]:
     """Returns a dict with metadata about the playlist."""
     return {
       key: val
