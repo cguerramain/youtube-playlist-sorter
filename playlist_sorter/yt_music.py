@@ -1,8 +1,10 @@
 """Utilities for interacting with the unofficial Youtube Music API."""
+
 import ytmusicapi
+import pandas as pd
 
 from functools import cached_property
-from typing import Any, Iterator
+from typing import Any, Iterator, TextIO
 from collections.abc import MutableMapping
 
 # Keys in the dict response from `YTMusic.get_playlist()` that do not contain metadata about the playlist.
@@ -59,3 +61,21 @@ class Playlist:
       https://ytmusicapi.readthedocs.io/en/stable/reference/playlists.html#ytmusicapi.YTMusic.get_playlist
     """
     yield from self.playlist_dict.get('tracks', [])
+
+  def to_csv(self, path_or_buf: str | TextIO, **kwargs) -> None:
+    metadata = {
+      key: val for key, val in self.metadata().items() if key in {'id', 'title'}
+    }
+    playlist_df = pd.json_normalize(
+      {'playlist': metadata, 'track': track} for track in self.tracks()
+    )
+
+    # Reorder columns to put playlist.* columns first.
+    columns = playlist_df.columns
+    playlist_cols = [col for col in columns if col.startswith('playlist.')]
+    other_cols = [col for col in columns if not col.startswith('playlist.')]
+    tracks_df = playlist_df[playlist_cols + other_cols]
+
+    default_kwargs = dict(index=False)
+    merged_kwargs = {**default_kwargs, **kwargs}
+    tracks_df.to_csv(path_or_buf, **merged_kwargs)
