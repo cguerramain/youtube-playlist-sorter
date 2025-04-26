@@ -1,3 +1,4 @@
+"""Utilities for interacting with the unofficial Youtube Music API."""
 import ytmusicapi
 
 from functools import cached_property
@@ -17,7 +18,7 @@ def create_client(
 
 
 class Playlist:
-  """Represents a Youtube Music playlist which will be read/modified.
+  """Represents a Youtube Music playlist to read/modify.
 
   Attributes:
     client: The `ytmusicapi` client to use.
@@ -25,7 +26,6 @@ class Playlist:
     playlist_dict: A cached dict with the playlist's information and tracks
         from the unofficial YouTube Music API. See full set of fields at:
         https://ytmusicapi.readthedocs.io/en/stable/reference/playlists.html#ytmusicapi.YTMusic.get_playlist
-
   """
 
   def __init__(self, client: ytmusicapi.YTMusic, playlist_id: str):
