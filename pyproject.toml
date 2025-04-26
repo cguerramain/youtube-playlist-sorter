@@ -1,6 +1,7 @@
 [project]
 name = "playlist_sorter"
 dynamic = ["version"]
+dependencies = ["typer>=0.9.0"]
 
 [tool.ruff]
 indent-width = 2
