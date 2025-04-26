@@ -4,6 +4,9 @@ from functools import cached_property
 from typing import Any, Iterator
 from collections.abc import MutableMapping
 
+# Keys in the dict response from `YTMusic.get_playlist()` that do not contain metadata about the playlist.
+_NON_METADATA_FIELDS = frozenset(['tracks', 'suggested', 'related'])
+
 
 def create_client(
   client_id: str, client_secret: str, oauth_json_path: str
@@ -38,6 +41,14 @@ class Playlist:
       https://ytmusicapi.readthedocs.io/en/stable/reference/playlists.html#ytmusicapi.YTMusic.get_playlist
     """
     return self.client.get_playlist(self.playlist_id)
+
+  def metadata(self):
+    """Returns a dict with metadata about the playlist."""
+    return {
+      key: val
+      for key, val in self.playlist_dict.items()
+      if key not in _NON_METADATA_FIELDS
+    }
 
   def tracks(self) -> Iterator[MutableMapping[str, Any]]:
     """Yields a dict of the next song in the order they appear in the playlist.

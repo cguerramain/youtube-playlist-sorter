@@ -6,6 +6,7 @@ Usage (run from the base repo directory):
 
 import os
 import json
+import pandas as pd
 from playlist_sorter import yt_music
 
 from dotenv import load_dotenv
@@ -21,5 +22,8 @@ if __name__ == '__main__':
     GCP_CLIENT_ID, GCP_CLIENT_SECRET, OAUTH_JSON_PATH
   )
   playlist = yt_music.Playlist(client, DEFAULT_PLAYLIST_ID)
-  for track in playlist.tracks():
-    print(json.dumps(track, indent=2))
+  print(json.dumps(playlist.metadata(), indent=2))
+  pd.set_option('display.max_columns', None)
+  print('Tracks: ')
+  tracks_df = pd.json_normalize(playlist.tracks())
+  print(tracks_df)
